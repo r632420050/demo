@@ -1,11 +1,12 @@
 #container {margin:0 auto; width:100%;}
-#header { height:100px; background:#141414; margin-bottom:2px;box-shadow:3px 3px 1em #bbb;}
+#header { height:70px; background:#fff; margin-bottom:2px;box-shadow:3px 3px 1em #bbb;}
 #mainContent {margin-bottom:2px;}
-#sidebar { float:left; width:200px;  background:#F0F0F0;box-shadow:1px 1px 1em #bbb;}
+#sidebar { float:left; width:200px;  background:#F0F0F0;box-shadow:1px 1px 1em #bbb;font-size:14px;}
 #content { margin-left:200px !important; margin-left:200px; overflow-y:auto;overflow-x:hidden }/*��content�趨�߶Ⱥ�3���ػ��ܵ�content��࣬����������!important������ie������ม��2���أ�����3���ص�bug�����5���أ������ڻ���IE����ʾ��һ���*/
 #sidebar li{height: 45px;float: left;width: 100%;border-bottom: 1px dotted #bbb;text-align: center;line-height: 45px;}
 #sidebar li:hover{background: #bbb}
-#header .logo{padding:25px 25px;}
+#sidebar li a{text-decoration:none;}
+#header .logo{padding:16px 16px;}
 #header h1{color: #fff;font-size: 28px;line-height: 100px;margin-right: 20px;}
 #box{border:1px solid #ccc;background:#f9f9f9;box-shadow:0 0 1em #ccc;}
 #box ul li{list-style-type: none;list-style-image: none;list-style: none}
@@ -17,6 +18,19 @@
 #box .icon{margin-left: 10px;}
 #box .col{float: left;}
 #box .buttons{display: none;float: left;}
+#box .tool_button{margin: 5px 0px 0px 58px;
+    border: 1px solid #C3EAFF;
+    border-radius: 6px;
+    width: 120px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    font-size: 14px;
+    color:#09AAFF;
+    }
+#box .tool_button a{color:#09AAFF;text-decoration:none;}    
+#box .tool_button img{vertical-align: middle;padding-right:8px;}
+#box .download{width: 80px;margin-left: 10px;}
 #box ul li:hover .buttons{display: block;} 
 #box .header{height: 45px;line-height: 45px;border-bottom: 1px solid #ddd;}
 #box .upload{position: relative;top: 5px;left:30px;}

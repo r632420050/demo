@@ -88,7 +88,7 @@ $.tmUpload.defaults = {
 	 var html =$("#aspupload").html();
 	 if(isEmpty(html)){
     	 $("body").append("<div id='aspupload'><div class='headbar'>"+
-		 "		<span class='fl bar_title'>潭州学院上传组件</span></span>"+
+		 "		<span class='fl bar_title'>百度云盘上传组件</span></span>"+
 		 "		<span class='fr bar_total'></span>"+
 		 "		<span class='fr bar_add'><a id='continue' onclick='tm_expand_close(this)' class='continue_1' href='javascript:void(0);'></a></span>"+
 		 "		<a href='javascript:void(0);' id='enlarge' onclick='tm_expand_upload(this)' class='windowClick shrink'></a>"+
