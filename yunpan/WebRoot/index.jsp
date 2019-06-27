@@ -24,7 +24,8 @@
 
 	<!-- 去除页面的滚动条 -->
 	<style type="text/css">
-		html, body{overflow: hidden;}
+		html, body{overflow: hidden;font-size:12px;color:#666;}
+		a{text-decoration:none;}
 		#box .name-text input{height:31px;line-height: 31px;width: 240px;}
 		.select{background: #c5c5c5}
 		#contentbox h1{font-size: 32px;text-align: center;margin-top: 50px;}
@@ -48,8 +49,8 @@
 <body>
 <div id="container">
   <div id="header">
-	<div class="fl logo"> <a href="http://www.tanzhouedu.net/index"><img src="images/logo.png"></a> </div>
-  	<div class="fr"><h1>百度云盘实现功能</h1></div>
+	<div class="fl logo"> <a href="https://pan.baidu.com/"><img src="images/logo.png"></a> </div>
+  	<div class="fr"></div>
   </div>
   <div id="mainContent">
     <div id="sidebar">
@@ -66,12 +67,27 @@
     	<div id="box">
 			<div class="header fl" style="width: 100%;">
 				<div class="upload fl"><span id="tmupload"></span></div>
-				<div class="fl" style="margin-left: 40px;">
-					<a href="javascript:void(0)">新建文件夹</a>
+				<div class="fl tool_button" >
+					<a href="javascript:void(0)">
+					 <img src="images/newfile.png" width="18px" heigth="18px"/>新建文件夹</a>
+				</div>
+				<div class="fl tool_button download"  >
+					<a href="javascript:void(0)">
+					 <img src="images/download.png" width="18px" heigth="18px"/>下载</a>
 				</div>
 			</div>
 			<ul class="fl" style="width: 100%;" id="contentbox">
-				
+				<li>
+					<div class="col c1" style="width: 50%;">
+		                
+		                <div class="name fl"><span class="name-text">文件名</span></div>
+		            </div>
+		            <div class="col" style="width: 16%">大小</div>
+		            <div class="col" style="width: 23%">修改时间</div>
+		            <div class="col" style="width: 10%">
+		            	操作
+		            </div>
+				</li>
 			</ul>
 		</div>
     </div>
@@ -85,19 +101,21 @@
 		//禁止浏览器的右键
 		document.body.oncontextmenu=document.body.ondragstart= document.body.onselectstart=document.body.onbeforecopy=function(){return false;};
 		//工具类的高度是自动换算的
-		$("#sidebar").height(getClientHeight()-103);
+		$("#sidebar").height(getClientHeight()-73);
 		//内容栏的高度是自动换算的
-		$("#content").height(getClientHeight()-105);
+		$("#content").height(getClientHeight()-75);
 		//这行是浏览器改变的时候自动的改变内容和工具栏的高度
 		$(window).resize(function(){
-			$("#sidebar").height(getClientHeight()-103);
-			$("#content").height(getClientHeight()-105);
+			$("#sidebar").height(getClientHeight()-73);
+			$("#content").height(getClientHeight()-75);
 		});
 		
 		//加载资源文件
 		fn_loadresources();
 		//执行保存文件
-		$.tmUpload({"fileTypes":"*.*",callback:function(data,file){
+		$.tmUpload({"fileTypes":"*.*",
+			url:"/yunpan/service/upload.jsp",//上传的路径
+			callback:function(data,file){
 			//alert(data);
 			var jdata = eval("("+data+")");
 			fn_saveresource(jdata);
@@ -123,7 +141,7 @@
 					alert("加载数据出错");	
 				}else{
 					var jsonArray = eval("("+data+")");
-					$("#contentbox").html("");
+					$("#contentbox .items").remove();
 					for(i in jsonArray )
 					   fn_appendresource(jsonArray[i]);
 					}
@@ -162,7 +180,7 @@
 		//发送ajax
 		$.ajax({
 			type:"post",
-			url:"/yunpan/service/resource.jsp",
+			url:"/yunpan/service/saveresource.jsp",
 			data:params,
 			success:function(data){
 				var result = data.trim();
@@ -221,7 +239,7 @@
 		        "    	<a href='javascript:void(0);' data-opid='"+jdata.id+"' onclick='fn_deleteresource(this);' ><img src='images/delete.gif'></a>"+
 		        "    </div>"+
 				"</li>");
-		$("#content").height(getClientHeight()-105);
+		$("#content").height(getClientHeight()-75);
 		
 	}
 	

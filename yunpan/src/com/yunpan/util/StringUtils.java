@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import sun.misc.BASE64Encoder;
+import org.apache.commons.codec.binary.Base64;
 
 public class StringUtils {
 
@@ -274,7 +274,7 @@ public class StringUtils {
 		if (b == null) {
 			return null;
 		}
-		return new BASE64Encoder().encode(b);
+		return Base64.encodeBase64String(b);
 	}
 	
 	/**
