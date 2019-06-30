@@ -26,7 +26,7 @@
 	<style type="text/css">
 		html, body{overflow: hidden;font-size:12px;color:#666;}
 		a{text-decoration:none;}
-		#box .name-text input{height:31px;line-height: 31px;width: 240px;}
+		#box .name-text input{height:31px;line-height: 31px;width: 280px;}
 		.select{background: #c5c5c5}
 		#contentbox h1{font-size: 32px;text-align: center;margin-top: 50px;}
 		.btns{background: #999;border-radius:2px;padding:8px 10px;color: #fff;}
@@ -75,18 +75,19 @@
 					<a href="javascript:void(0)">
 					 <img src="images/download.png" width="18px" heigth="18px"/>下载</a>
 				</div>
+				<div class="fl tool_button"   >
+					<a href="javascript:void(0)">批量删除</a>
+				</div>
 			</div>
 			<ul class="fl" style="width: 100%;" id="contentbox">
 				<li>
 					<div class="col c1" style="width: 50%;">
-		                
+		                <div class="fl"><input type='checkbox' class='chk'></div>
 		                <div class="name fl"><span class="name-text">文件名</span></div>
 		            </div>
 		            <div class="col" style="width: 16%">大小</div>
 		            <div class="col" style="width: 23%">修改时间</div>
-		            <div class="col" style="width: 10%">
-		            	操作
-		            </div>
+		            <div class="col" style="width: 10%">操作</div>
 				</li>
 			</ul>
 		</div>
@@ -97,9 +98,9 @@
 <script type="text/javascript">
 	$(function(){
 		//禁止文本窗口选中
-		tm_forbiddenSelect();
+		//tm_forbiddenSelect();
 		//禁止浏览器的右键
-		document.body.oncontextmenu=document.body.ondragstart= document.body.onselectstart=document.body.onbeforecopy=function(){return false;};
+		//document.body.oncontextmenu=document.body.ondragstart= document.body.onselectstart=document.body.onbeforecopy=function(){return false;};
 		//工具类的高度是自动换算的
 		$("#sidebar").height(getClientHeight()-73);
 		//内容栏的高度是自动换算的
@@ -121,7 +122,7 @@
 			fn_saveresource(jdata);
 		}});
 		
-		
+		fn_editResource();
 	});
 	
 	/**
@@ -225,17 +226,89 @@
 	}
 	
 	
+	function fn_editResource(){
+	
+	
+		$("#contentbox").on("click",".edit",function(){
+            
+			var $name = $(this).parents(".items").find(".resource-name");
+			var text = $name.text();
+			var html = "<input type='text' maxlength='50' class='itemvalue' value='"+text+"'/>"+
+			           "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' class='save'><img src='images/icon_ok.png' alt='保存' /></a>"+
+			           "&nbsp;&nbsp;&nbsp;<a href='javascript:void(0);' class='cancle'><img src='images/icon_close.png'  alt='取消' /></a>";
+			$name.html(html);
+			$(this).hide();
+			$name.next().hide();
+			$name.find(".itemvalue").select();
+			var $this = $(this);
+			
+			//点击取消按钮
+			$name.find(".cancle").click(function(){
+				alert(1);
+				$name.html(text);
+				$this.show();
+				$name.next().show();
+			});
+			
+			
+			//保存
+			$name.find(".save").click(function(){
+		
+				var newValue = $name.find(".itemvalue").val();
+	
+				//如果输入的值为空
+				if(newValue =="" || newValue == text ){
+					$name.find(".cancle").trigger("click");
+					return;
+				}
+
+				if(newValue.length>100){
+					alert("长度过长")
+					return;
+				}
+				alert("保存的文件名："+newValue);
+				
+				var id = $(this).parents(".items").data("opid");
+				var ext = $name.next().text();
+				$.ajax({
+					type:"post",
+					url:"service/updateResource.jsp",
+					data:{"id":id,"name":newValue+ext},
+					success:function(data){
+					  if(data.trim()=="success"){						 
+						 $name.next().show();
+						 $name.html(newValue);
+						 $this.show();
+						 alert("修改成功！"); 
+					  }else{
+						$name.find(".cancle").trigger("click");  
+						alert("修改失败！"); 
+					  }	
+					
+				}
+					
+			  });
+				
+		});
+			
+	});
+		
+ }
+	
+	
 	function fn_appendresource(jdata){
-		$("#contentbox").append("<li class='items'>"+
+		$("#contentbox").append("<li class='items' data-opid='"+jdata.id+"'>"+
 				"		<div class='col c1' style='width: 50%;'>"+
-		        "        <span class='chk fl'><input type='checkbox' class='chk'></span>"+
-		        "        <span class='fl icon'><img src='images/gif.png'></span>"+
-		        "        <div class='name fl'><span class='name-text'>"+jdata.name+"</span></div>"+
+		        "        <div class='fl'><input type='checkbox' class='chk'>"+
+		        "        <span class='icon'><img src='images/gif.png'></span></div>"+
+		        "        <div class='name fl'>"+
+		        "           <span class='name-text'><span class='resource-name'>"+tm_getFileName(jdata.name)+"</span><span class='fileext'>."+jdata.ext+"</span></span>"+
+		        "           </div>"+
 		        "    </div>"+
 		        "    <div class='col' style='width: 16%'>"+jdata.sizeString+"</div>"+
 		        "    <div class='col' style='width: 23%;color:green;' >"+fn_dateFormat(jdata.createTime)+"</div>"+
 		        "    <div class='col buttons' style='width: 10%'>"+
-		        "    	<a href='javascript:void(0);'><img src='images/edit.png'></a>&nbsp;&nbsp;"+
+		        "    	<a href='javascript:void(0);' class='edit' ><img src='images/edit.png'></a>&nbsp;&nbsp;"+
 		        "    	<a href='javascript:void(0);' data-opid='"+jdata.id+"' onclick='fn_deleteresource(this);' ><img src='images/delete.gif'></a>"+
 		        "    </div>"+
 				"</li>");

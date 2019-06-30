@@ -234,12 +234,12 @@ function tm_getExt(fileName) {
 
 /* 获取文件名称 */
 function tm_getFileName(fileName) {
-	var pos = fileName.lastIndexOf("/") + 1;
-	if (pos == -1) {
+	if (fileName.lastIndexOf(".") == -1){
 		return fileName;
-	} else {
-		return fileName.substring(pos, fileName.length);
-	}
+	}		
+	var pos = fileName.lastIndexOf(".");
+    return fileName.substring(0,pos);
+
 }
 
 

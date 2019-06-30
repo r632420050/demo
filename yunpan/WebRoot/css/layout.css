@@ -1,3 +1,4 @@
+*{margin:0px;padding:0px;}
 #container {margin:0 auto; width:100%;}
 #header { height:70px; background:#fff; margin-bottom:2px;box-shadow:3px 3px 1em #bbb;}
 #mainContent {margin-bottom:2px;}
@@ -13,7 +14,7 @@
 #box ul li{border-bottom: 1px solid #D2D2D2;height: 38px;text-indent: 30px;line-height: 38px;}
 #box ul li:hover{background:#f0f8fd}
 #box .name{width: 85%;}
-#box .name-text{display:block;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;width: 100%;float: left;margin-top: -2px;}
+#box .name-text{display:block;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;float: left;margin-top: -2px;}
 #box .chk{height:16px;width:16px;}
 #box .icon{margin-left: 10px;}
 #box .col{float: left;}
