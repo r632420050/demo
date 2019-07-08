@@ -239,6 +239,10 @@ public class ResourceDao {
 	}
 	
 	
+	
+	
+		
+	
 	/**
 	 * 根据主键ID删除文件方法
 	 * 方法名：saveResource<BR>
@@ -299,6 +303,35 @@ public class ResourceDao {
 	}
 	
 	/**
+	 * 
+	 * 方法名：removeResources<BR>
+	 * 创建人：mr.yang <BR>
+	 * 时间：2014年11月25日-下午9:27:19 <BR>
+	 * @return boolean<BR>
+	 * @exception <BR>
+	 * @since  1.0.0
+	 */
+	public static boolean removeResources(String ids){
+		String sql =transferSql2("tm_resource",ids);
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try{
+			//获取连接
+			connection = ConnectUtils.getConnection();
+			//处理sql
+			statement = connection.prepareStatement(sql);
+			//执行sql 受影响的行: 2
+			int count = statement.executeUpdate();
+			return count > 0 ? true :false;
+		}catch(Exception ex){
+			ex.printStackTrace();
+			return false;
+		}finally{
+			ConnectUtils.closeConnection(connection, statement, null);
+		}
+	}
+	
+	/**
 	 * 转换sql
 	 * 方法名：transferSql<BR>
 	 * 创建人：mr.yang <BR>
@@ -310,7 +343,7 @@ public class ResourceDao {
 	 * @since  1.0.0
 	 */
 	public static String transferSql(String table,String param){
-		String sql = "delete from "+table+" where id in(";
+		String sql = "update "+table+" set is_delete = 1  where id in (";
 		if(StringUtils.isNotEmpty(param)){
 			String[] params = param.split(",");
 			for (int i = 0; i < params.length; i++) {
@@ -322,6 +355,39 @@ public class ResourceDao {
 			}
 		}
 		sql+=")";
+		
+		System.out.println(sql);
+		return sql;
+	}
+	
+	
+
+	/**
+	 * 转换sql
+	 * 方法名：transferSql<BR>
+	 * 创建人：mr.yang <BR>
+	 * 时间：2014年11月25日-下午9:53:44 <BR>
+	 * @param table
+	 * @param param
+	 * @return String<BR>
+	 * @exception <BR>
+	 * @since  1.0.0
+	 */
+	public static String transferSql2(String table,String param){
+		String sql = "Delete from "+table+" where id in (";
+		if(StringUtils.isNotEmpty(param)){
+			String[] params = param.split(",");
+			for (int i = 0; i < params.length; i++) {
+				if(i==params.length-1){
+					sql+= params[i];
+				}else{
+					sql+= params[i]+",";
+				}
+			}
+		}
+		sql+=")";
+		
+		System.out.println(sql);
 		return sql;
 	}
 	

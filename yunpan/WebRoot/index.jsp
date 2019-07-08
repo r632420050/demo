@@ -34,6 +34,7 @@
 		.off{background:#ccc;padding:5px;color:#fff;}
 		.on{background:green;padding:5px;color:#fff;}
 		#tmpage{position: relative;top:8px;left:24px;float:left;}
+		
 	</style>
 	<!-- 
 		---初学者,有点经验
@@ -49,9 +50,21 @@
 <body>
 <div id="container">
   <div id="header">
-	<div class="fl logo"> <a href="https://pan.baidu.com/"><img src="images/logo.png"></a> </div>
-  	<div class="fr"></div>
-  </div>
+   <div class="h_header">
+	<div class="fl "> <a class="logo" href="https://pan.baidu.com/"></a> </div>
+  	<div class="fr h_info">
+  		<div class="fl h_user">
+  			当前用户：<span>${user.account}</span> , 身份：<span>${user.username}</span>
+  		</div>
+  		<div class="fr h_out">
+  			<a href="service/logout.jsp">
+  				<span>退出</span>
+  				<i></i>
+  			</a>
+  		</div>
+  	</div>
+   </div>		
+ </div>
   <div id="mainContent">
     <div id="sidebar">
     	<ul>
@@ -60,27 +73,27 @@
 	    		<li class="slidebar"><a href="javascript:void(0);" data-type="2" onclick="fn_loadresources(this)">图片</a></li>
 	    		<li class="slidebar"><a href="javascript:void(0);" data-type="3" onclick="fn_loadresources(this)">视频</a></li>
 	    		<li class="slidebar"><a href="javascript:void(0);" data-type="4" onclick="fn_loadresources(this)">其他</a></li>
-	    		<li class="slidebar"><a href="javascript:void(0);" data-type="5" onclick="fn_loadresources(this)">回收站</a></li>
+	    		<li class="slidebar"><a href="javascript:void(0);" data-type="5"  id="recycle" onclick="fn_loadresources(this)">回收站</a></li>
     	</ul>
     </div>
     <div id="content">
     	<div id="box">
-			<div class="header fl" style="width: 100%;">
-				<div class="upload fl"><span id="tmupload"></span></div>
-				<div class="fl tool_button" >
+			<div class="header fl" style="width: 100%;" id="contentheader">
+				<div class="upload fl  t_buttons"><span id="tmupload"></span></div>
+				<div class="fl tool_button newfile t_buttons" >
 					<a href="javascript:void(0)">
 					 <img src="images/newfile.png" width="18px" heigth="18px"/>新建文件夹</a>
 				</div>
-				<div class="fl tool_button download"  >
+				<div class="fl tool_button t_buttons"  >
 					<a href="javascript:void(0)">
 					 <img src="images/download.png" width="18px" heigth="18px"/>下载</a>
 				</div>
-				<div class="fl tool_button"   >
+				<div class="fl tool_button"  style="display:none;" id="deletebatch" >
 					<a href="javascript:void(0)">批量删除</a>
 				</div>
 			</div>
 			<ul class="fl" style="width: 100%;" id="contentbox">
-				<li>
+				<li id="contenttitle">
 					<div class="col c1" style="width: 50%;">
 		                <div class="fl"><input type='checkbox' class='chk'></div>
 		                <div class="name fl"><span class="name-text">文件名</span></div>
@@ -122,17 +135,104 @@
 			fn_saveresource(jdata);
 		}});
 		
+		//编辑资源
 		fn_editResource();
+		
+		//全选按钮
+		$("#contenttitle").find(".chk").click(function(){
+		  if($(this).prop("checked")){
+		  	$("#contentbox").find(".items").find(".chk").prop("checked",true);
+		  	$("#deletebatch").fadeIn("slow");
+		  }else{
+		    $("#contentbox").find(".items").find(".chk").prop("checked",false);
+		    $("#deletebatch").fadeOut("slow");
+		  }
+		});
+		
+		//点击选择框
+		$("#contentbox").on("click",".chk",function(){
+			 if($(this).prop("checked")){
+			  $("#deletebatch").stop(true,true).fadeIn("slow");
+			 } 
+			 if($("#contentbox").find(".chk:checked").length==0){
+			  $("#deletebatch").stop(true,true).fadeOut("slow");
+			 }
+			 
+		  
+		});
+		
+		//点击批量删除
+	    $("#deletebatch").click(function(){
+		  tm_dialoag({
+		  	title:"删除提示",
+		    content:"你确定要删除选中的内容？",
+		    callback:function(ok){
+		  		if(ok){
+		  		   var ids = [];
+		  		   //判断勾选了哪些文件，同时获取文件的id
+		  		   var $checkboxs = $("#contentbox").find(".chk:checked");
+		  		   
+		  		   $checkboxs.each(function(){
+		  		      var opid = $(this).parents(".items").data("opid");
+		  		      if(opid){
+		  		      	ids.push(opid);
+		  		      }
+		  		   });
+		  		  
+		  		 // alert(ids); 
+		  		  //如果没有选中 
+		  		  if(ids.length<1) return;
+		  		  var url;
+		  		  if($("#recycle").data("isclick") == "1"){
+		  		  	url="service/removeResources.jsp";
+		  		  }else{
+		  		    url="service/deleteResources.jsp";
+		  		  } 
+		  		   //请求服务器进行删除
+		  		  $.ajax({
+		  		  	type:"post",
+		  		  	url:url,
+		  		    data:{"ids":ids.toString()},
+		  		    success:function(data){
+		  		    	if(data.trim()=="success"){
+		  		    	    $checkboxs.each(function(){
+					  		   $(this).parents(".items").slideUp("slow",function(){
+								 $(this).remove();
+							   });
+					  		 });
+		  		    	   $("#deletebatch").fadeOut("slow");
+		  		    	   $("#contenttitle").find(".chk").prop("checked",false);
+		  		    	    alert("删除成功！");
+		  		    	}else{
+		  		    		alert("删除失败！");
+		  		    	}
+		  		    } 
+		  		  }); 
+		  		   
+		  		   
+		  		  
+		  	     }
+		  			 
+		  	}
+		  });
+	    });
+	    
+	    
+	    
+		
 	});
 	
 	/**
 	* 资源加载
 	*/
 	function fn_loadresources(obj){
+	    //重新请求资源时，把全选按钮设置为不能全选
+	    $("#contenttitle").find(".chk").prop("checked",false);
 		var datatype = "";
 		if(obj){
 			datatype = $(obj).data("type");
 		}
+		
 		$.ajax({
 			type:"post",
 			url:"service/loadresource.jsp",
@@ -148,6 +248,14 @@
 					}
 				}
 			});
+			
+		  	if($(obj).attr("id")=="recycle"){
+				$("#recycle").data("isclick",1);
+				$("#contentheader .t_buttons").hide();
+			}else{
+				$("#recycle").data("isclick",0);
+				$("#contentheader .t_buttons").show();
+			}	
 		
 	   }
 	
@@ -225,12 +333,11 @@
 		
 	}
 	
-	
+	//修改文件名称
 	function fn_editResource(){
 	
 	
 		$("#contentbox").on("click",".edit",function(){
-            
 			var $name = $(this).parents(".items").find(".resource-name");
 			var text = $name.text();
 			var html = "<input type='text' maxlength='50' class='itemvalue' value='"+text+"'/>"+
@@ -266,7 +373,7 @@
 					alert("长度过长")
 					return;
 				}
-				alert("保存的文件名："+newValue);
+				//alert("保存的文件名："+newValue);
 				
 				var id = $(this).parents(".items").data("opid");
 				var ext = $name.next().text();
@@ -297,6 +404,14 @@
 	
 	
 	function fn_appendresource(jdata){
+	
+	     //如果是回收站，不增加按钮
+	     var html="";
+	     if($("#recycle").data("isclick") != "1"){
+	            html ="    	<a href='javascript:void(0);' class='edit' ><img src='images/edit.png'></a>&nbsp;&nbsp;"+
+		            "    	<a href='javascript:void(0);' data-opid='"+jdata.id+"' onclick='fn_deleteresource(this);' ><img src='images/delete.gif'></a>";
+	     }
+	
 		$("#contentbox").append("<li class='items' data-opid='"+jdata.id+"'>"+
 				"		<div class='col c1' style='width: 50%;'>"+
 		        "        <div class='fl'><input type='checkbox' class='chk'>"+
@@ -307,9 +422,8 @@
 		        "    </div>"+
 		        "    <div class='col' style='width: 16%'>"+jdata.sizeString+"</div>"+
 		        "    <div class='col' style='width: 23%;color:green;' >"+fn_dateFormat(jdata.createTime)+"</div>"+
-		        "    <div class='col buttons' style='width: 10%'>"+
-		        "    	<a href='javascript:void(0);' class='edit' ><img src='images/edit.png'></a>&nbsp;&nbsp;"+
-		        "    	<a href='javascript:void(0);' data-opid='"+jdata.id+"' onclick='fn_deleteresource(this);' ><img src='images/delete.gif'></a>"+
+		        "    <div class='col buttons' style='width: 10%'>"
+		        +html+
 		        "    </div>"+
 				"</li>");
 		$("#content").height(getClientHeight()-75);

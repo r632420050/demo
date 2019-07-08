@@ -298,17 +298,32 @@ public class StringUtils {
 	}
 	
 	
+	/**
+	 * 
+	 * 功能描述: 密码加盐后进行加密</br> 
+	 * 方法名 : saltPassword</br> 
+	 * 创建人： EE</br> 
+	 * 创建时间： 2019年7月7日下午8:56:50</br> 
+	 * @return String
+	 * @param slatString
+	 * @param password
+	 * @return  
+	 * @since 1.0.0
+	 */
 	public static String saltPassword(String slatString,String password){
 		return md5Base64(slatString+password);
 	}
 	
+	public static String getSlatString(){
+		return "hello world!";
+	}
+	
+	
+	
 	public static void main(String[] args) {
-		long start = System.currentTimeMillis();
-		for (int i = 1; i <= 1000; i++) {
-			System.out.println("====="+i);
-		}
-		long end = System.currentTimeMillis();
-		System.out.println("一共耗费:"+(end-start)+"毫秒");
+		System.out.println(saltPassword(getSlatString(),"yyyy"));
+		System.out.println(md5Base64(getSlatString()+"yyyy"));
+		System.out.println("R+y2EuAiKTV3oxCNHFeiHg==".equals(md5Base64(getSlatString()+"yyyy")));
 	}
 
 }
