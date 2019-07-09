@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>云盘登录</title>
+    <style>
+        *{padding: 0px;margin:0px;font-size: 12px;font-family:"微软雅黑";color:black;}
+        a{text-decoration: none;}
+
+        .fl{ float: left;}
+        .fr{ float: right;}
+        /*start header*/
+        .header-container{width:100%;height:60px;box-shadow: 1px 2px 5px 0px #ccc;}
+        .header-container .login-header{width:96%;height:60px;margin:0px auto;}
+        .header-container .login-header .logo{background:url("images/logo.png") no-repeat center;height:60px;width:157px;display: block;}
+        .header-container .login-header .login-title{margin:25px 10px 0px 0px;} 
+        .header-container .login-header .login-title a{font-size:14px;margin-right: 30px;color:#858181;}
+        .header-container .login-header .login-title a:hover{color:#09aaff;}
+        .header-container .login-header .login-title .center-entry{ background:#f0d7a3;padding: 4px 10px;border-radius: 10px;color: #333; margin-right:0px;}
+        /*end header*/
+
+        /*start content*/
+        .login-content{position: relative;}
+        .login-content .content{margin-top:60px; background:url("images/download_bg.png") repeat-x;}
+        .login-content .content .content-info{background: url("images/guanjia_bg.jpg") no-repeat;width: 1040px;height: 470px;}
+        .login-main{height: 385px;width: 352px;background: rgba(255, 255, 255, 0.55);position: absolute;top: 25px;right: 30px; border-radius: 6px;}
+        /*start loginform*/
+        .login-form{padding:0 20px;}
+        .form-logo{padding:30px 0px 12px 0px;color:#333;font-size: 18px;font-weight: bold;}
+        .form-error{height:28px;padding-bottom:2px;}
+         #error-message{color:red;line-height:28px;font-weight:bold;}
+        .form-text-input{height:26px;width:284px;font-size:14px;color:#666;line-height:26px;padding:7px 10px;border:1px solid #dedede;outline:none;}
+        .form-text-username{padding-left: 16px!important;border: 0;border-bottom: 1px solid #e7e7e7;border-top-left-radius: 4px;border-top-right-radius: 4px;}
+        .form-text-password{padding-left: 16px!important;border: 0;border-bottom-left-radius: 4px;border-bottom-right-radius: 4px;}
+        .form-item-memberPass{padding-top: 20px;}
+        .form-item-submit{padding-top: 20px;}
+        .form-button-submit{ width: 100%;height: 41px; background: #09aaff;border-radius: 4px; transition: .3s;font-size: 16px;border: 0;color: #fff;cursor: pointer;text-decoration: none;font-family: Microsoft YaHei,SimHei,Tahoma; font-weight: 100;line-height: 40px;}  
+        .form-button-submit:hover{background: #479df3;}
+        .form-item-fgtpwd{color: #666;text-decoration: none;font-size: 14px;padding-top: 14px;}
+        /*end loginform*/
+        .login-footerbar{padding: 0 20px; height: 65px;margin-top: 14px;line-height: 65px;background: rgba(255, 255, 255, 0.61); border-bottom-left-radius: 4px;border-bottom-right-radius: 3px;}
+        .footerbar-Qrcode{color: #09aaff;font-size:14px;width:94px;}
+        .footerbar-register{color: #09aaff;font-size:14px;width:94px;text-align: right;}
+        /*content end*/
+
+        /*start footer*/
+        .footer{text-align: center;font-size: 12px;color: #b6bac3;padding-bottom: 10px;margin-top: 30px;}
+        .footer a{color: #b6bac3;}
+        /*end footer*/
+        
+/*         .register-box{ */
+/*         	position:fixed; */
+/*         	width:100%; */
+/*         	height:100%; */
+/*         	top:0px; */
+/*         	margin:0 auto; */
+/*         	background: rgba(52, 51, 51, 0.79); */
+/*         	display:none; */
+/*         } */
+        
+/*         .register-box .register-iframe{ */
+/*         	width:50%; */
+/*  	       	height:700px; */
+/*     		margin:0 auto; */
+/*     		text-align:center */
+/*         } */
+        
+/*         .register-box .register-iframe iframe { */
+/* 			width:50%; */
+/*  	       	height:700px;   	 */
+/* 		 } */
+    </style>
+
+
+</head>
+<body>
+    <!--start header-container-->
+    <div class="header-container">
+        <div class="login-header">
+            <a class="logo fl" href="http://pan.baidu.com" title="网盘">
+            </a>
+            <div class="login-title fr">
+                <a  href="http://www.baidu.com" target="_blank">百度首页</a>
+                <a  href="http://www.baidu.com" target="_blank">客户端下载</a>
+                <a  href="http://www.baidu.com" target="_blank">官方贴吧</a>
+                <a  href="http://www.baidu.com" target="_blank">官方微博</a>
+                <a  href="http://www.baidu.com" target="_blank">问题反馈</a>
+                <a  href="http://www.baidu.com" target="_blank">内容商城</a>
+                <a class="center-entry"  href="http://www.baidu.com" target="_blank">会员中心</a>
+            </div>
+        </div>
+    </div>
+    <!--end header-container-->
+    <!--start content-->
+    <div class="login-content">
+        <div class="content">
+            <div class="content-info"></div>
+        </div>
+        <!--start login-->
+        <div class="login-main"> 
+            <form class="login-form" method="POST">
+                <p class="form-logo">账号密码登录</p>
+                <p class="form-error" ><span id="error-message"></span></p>
+                <p>
+                    <input class="form-text-input form-text-username" type="text" id="account" name="account" autocomplete="off" placeholder="手机/邮箱/用户名"/>
+                </p>    
+                <p>
+                    <input class="form-text-input form-text-password" type="password" id="password" name="password" autocomplete="off" placeholder="密码"/>
+                </p>   
+                <p class="form-item-memberPass"> 
+                    <label >
+                        <input type="checkbox"  name="memberPass">
+                        <span>下次自动登录</span>
+                    </label>
+                </p>
+                <p class="form-item-submit">
+                    <input type="button" class="form-button-submit" id="loginbutton" value="登录">
+                </p>    
+                <p class="form-item-fgtpwd">
+                    <a href="javascript:void(0);">忘记密码</a>
+                </p>    
+
+            </form>
+            <div class="login-footerbar">
+                <a href="javascript:void(0);" class="footerbar-Qrcode fl">扫一扫登录</a>
+
+                <a href="javascript:void(0);" class="footerbar-register fr" id="register" >立即注册</a>
+                
+            </div>
+
+        </div>
+        <!--end login-->
+		
+    </div>
+    <!--end content-->
+    <!--start footer-->
+    <div class="footer">
+                ©2019 Baidu 
+                <a class="b-lnk-gy" href="//pan.baidu.com/platform/home" target="_blank">移动开放平台</a> 
+                | <a class="b-lnk-gy" href="/disk/duty/" target="_blank">服务协议</a> 
+                | <a class="b-lnk-gy" href="http://yun.baidu.com/disk/privacy" target="_blank">权利声明</a> 
+                | <a class="b-lnk-gy" href="http://yun.baidu.com/disk/version" target="_blank">版本更新</a> 
+                | <a class="b-lnk-gy" href="http://yun.baidu.com/disk/help" target="_blank">帮助中心</a> 
+                | <a class="b-lnk-gy" href="http://copyright.baidu.com/index.php/index/complaint" target="_blank">版权投诉</a>
+    </div>
+    
+<!--     <div class="register-box"> -->
+<!--     	<div class="register-iframe"> -->
+<!-- 			<iframe src="register.jsp" scrolling="no" frameborder="0"></iframe> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+    
+    <!--end footer-->
+	<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="js/util.js"></script>
+    <script type="text/javascript">
+    
+     $(function(){
+     
+     	$("#account").focus();
+     	$("#loginbutton").click(function(){
+     		 fn_login();	
+     	});
+     	
+     	$("#register").click(function(){
+     		window.location.href="register.jsp";
+     	});
+     
+     });
+      
+       /**
+    	 * 登录
+    	*/
+        function fn_login(){
+        	//获取用户名、密码
+    		var account = $("#account").val();
+    		var password = $("#password").val();
+    		//判断用户名是否为空
+    		if(isEmpty(account)){
+    			$("#account").focus();
+    			fn_showmessage($("#error-message"),"账号不能为空！");
+    			return;
+    		}
+    		//判断密码是否为空
+    		if(isEmpty(password)){
+    			$("#password").focus();
+    			fn_showmessage($("#error-message"),"密码不能为空！");
+    			return;
+    		}
+    		
+    		$.ajax({
+    			type:"post",
+    			url:"service/login.jsp",
+    			data:{"account":account,"password":password},
+    			success:function(data){
+    				if(data.trim()=="success"){
+    					alert("登录成功！")
+    					window.location.href="index.jsp";
+    				}else{
+    					fn_showmessage($("#error-message"),"账号或密码输入错误，请确认！");
+    					$("#password").focus();
+    				}
+    				$("#password").val("");
+    			}
+    		});
+    		
+    	}
+    	
+    	/**
+    	 * 显示错误信息
+    	*/
+    	function fn_showmessage($obj,content){
+    		$obj.html(content).show().stop(true,true).fadeOut(3000);
+    	}
+    	
+    </script>
+</body>
+</html>
